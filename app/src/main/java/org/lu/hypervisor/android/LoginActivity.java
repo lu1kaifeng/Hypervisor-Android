@@ -101,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                     user.userName = userNameInput.getText().toString();
                     user.password = passwordInput.getText().toString();
                     user.token = token;
+                    AppDatabase.getDb(getApplicationContext()).userDao().delAll();
                     AppDatabase.getDb(getApplicationContext()).userDao().insert(user);
                     runOnUiThread(()->{
                         progressBar.setVisibility(View.GONE);

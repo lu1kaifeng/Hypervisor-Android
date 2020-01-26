@@ -1,5 +1,7 @@
 package org.lu.hypervisor.android.api;
 
+import org.lu.hypervisor.android.api.model.Misbehavior;
+import org.lu.hypervisor.android.api.model.Notification;
 import org.lu.hypervisor.android.api.model.Photo;
 import org.lu.hypervisor.android.api.model.Subject;
 
@@ -37,7 +39,9 @@ public abstract class ApiClient {
 
     }
     public static abstract class Misbehavior{
-
+        public static List<org.lu.hypervisor.android.api.model.Misbehavior> getAll(String token){
+            return FeignClient.misbehaviorApi.getAllMisbehavior(toKeyPair(new String[]{"x-api-key"},new Object[]{token}));
+        }
     }
     public static abstract class Subject{
         public static String login(String password,String name){
@@ -51,6 +55,14 @@ public abstract class ApiClient {
         }
         public static Photo getPhoto(String token){
             return FeignClient.subjectApi.getSubjectPhoto(toKeyPair(new String[]{"x-api-key"},new Object[]{token}));
+        }
+        public static Photo getPhotoBySujectId(String token,Long subjectId){
+            return FeignClient.subjectApi.getSubjectPhotoById(toKeyPair(new String[]{"x-api-key"},new Object[]{token}),subjectId);
+        }
+    }
+    public static abstract class Notification{
+        public static org.lu.hypervisor.android.api.model.Notification get(String token){
+            return FeignClient.notificationApi.getNotification(toKeyPair(new String[]{"x-api-key"},new Object[]{token}));
         }
     }
 }

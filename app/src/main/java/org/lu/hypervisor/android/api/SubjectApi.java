@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import feign.HeaderMap;
+import feign.Param;
 import feign.QueryMap;
 import feign.RequestLine;
 
@@ -31,4 +32,7 @@ interface SubjectApi {
 
     @RequestLine("GET /subject/photo")
     Photo getSubjectPhoto(@HeaderMap Map<String, Object> headers);
+
+    @RequestLine("GET /subject/{id}/photo")
+    Photo getSubjectPhotoById(@HeaderMap Map<String, Object> headers, @Param("id") Long subjectId);
 }
