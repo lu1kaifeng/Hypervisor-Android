@@ -1,5 +1,10 @@
 package org.lu.hypervisor.android;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -7,6 +12,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.os.SystemClock;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -26,13 +32,18 @@ import android.view.Menu;
 import android.widget.TextView;
 
 import org.lu.hypervisor.android.api.ApiClient;
+import org.lu.hypervisor.android.api.model.Notification;
 import org.lu.hypervisor.android.api.model.Photo;
 import org.lu.hypervisor.android.api.model.Subject;
 import org.lu.hypervisor.android.persist.AppDatabase;
 import org.lu.hypervisor.android.persist.User;
+import org.lu.hypervisor.android.receivers.ResponseBroadcastReceiver;
+import org.lu.hypervisor.android.receivers.ToastBroadcastReceiver;
+import org.lu.hypervisor.android.services.BackgroundService;
 
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -42,12 +53,20 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private Subject currentUser;
+    private ResponseBroadcastReceiver broadcastReceiver;
     private ExecutorService backgroundThread = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        broadcastReceiver= new ResponseBroadcastReceiver();
+        IntentFilter intentFilter= new IntentFilter();
+        intentFilter.addAction(BackgroundService.ACTION);
+        registerReceiver(broadcastReceiver,intentFilter);
+        scheduleAlarm();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -71,7 +90,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         backgroundThread.submit(()->{
-            String token =AppDatabase.getDb(MainActivity.this.getApplicationContext()).userDao().getALl().get(0).token;
+            AppDatabase database = AppDatabase.getDb(MainActivity.this.getApplicationContext());
+            String token =database.userDao().getALl().get(0).token;
+            database.close();
             this.currentUser = ApiClient.Subject.getInfo(token);
             Photo photo = ApiClient.Subject.getPhoto(token);
             runOnUiThread(()->{
@@ -98,5 +119,13 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    private  void scheduleAlarm() {
+        Intent toastIntent= new Intent(getApplicationContext(), ToastBroadcastReceiver.class);
+        PendingIntent toastAlarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, toastIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        long startTime=System.currentTimeMillis(); //alarm starts immediately
+        AlarmManager backupAlarmMgr=(AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        backupAlarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,startTime,1000,toastAlarmIntent); // alarm will repeat after every 15 minutes
     }
 }

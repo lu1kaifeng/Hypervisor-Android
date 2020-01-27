@@ -24,7 +24,17 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
         </activity>
-
+        <receiver android:name=".receivers.ResponseBroadcastReceiver"
+            android:process=":remote">
+            <intent-filter>
+                <action android:name="ke.co.appslab.androidbackgroundservices.Receivers.ResponseBroadcastReceiver"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receivers.ToastBroadcastReceiver"
+            android:process=":remote">
+        </receiver>
+        <service android:name=".services.BackgroundService"
+            android:exported="false" ></service>
     </application>
 
 </manifest>

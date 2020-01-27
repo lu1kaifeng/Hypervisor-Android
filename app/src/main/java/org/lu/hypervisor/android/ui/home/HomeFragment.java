@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import org.lu.hypervisor.android.MainActivity;
 import org.lu.hypervisor.android.R;
 import org.lu.hypervisor.android.api.ApiClient;
 import org.lu.hypervisor.android.api.model.Misbehavior;
@@ -50,7 +51,9 @@ public class HomeFragment extends Fragment {
         return root;
     }
     private void loadData(){
-        String token = AppDatabase.getDb(getContext()).userDao().getALl().get(0).token;
+        AppDatabase database = AppDatabase.getDb(getActivity().getApplicationContext());
+        String token =database.userDao().getALl().get(0).token;
+        database.close();
         try {
             List<Misbehavior> misbehaviorList = ApiClient.Misbehavior.getAll(token);
             HashMap<Misbehavior, Photo> photoHashMap = new HashMap<>();

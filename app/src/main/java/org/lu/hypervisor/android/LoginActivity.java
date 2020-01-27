@@ -96,13 +96,16 @@ public class LoginActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.VISIBLE);
                 });
                 try{
+                    AppDatabase database = AppDatabase.getDb(LoginActivity.this.getApplicationContext());
                     String token = ApiClient.Subject.login(LoginActivity.this.passwordInput.getText().toString(),LoginActivity.this.userNameInput.getText().toString());
+                    database.close();
                     User user = new User();
                     user.userName = userNameInput.getText().toString();
                     user.password = passwordInput.getText().toString();
                     user.token = token;
-                    AppDatabase.getDb(getApplicationContext()).userDao().delAll();
-                    AppDatabase.getDb(getApplicationContext()).userDao().insert(user);
+                    database.userDao().delAll();
+                    database.userDao().insert(user);
+                    database.close();
                     runOnUiThread(()->{
                         progressBar.setVisibility(View.GONE);
                         Intent intent = new Intent(this, MainActivity.class);
