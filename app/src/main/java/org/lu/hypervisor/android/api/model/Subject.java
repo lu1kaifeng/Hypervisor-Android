@@ -1,6 +1,8 @@
 package org.lu.hypervisor.android.api.model;
 
-public class Subject {
+import java.io.Serializable;
+
+public class Subject implements Serializable {
     private Long id;
     private String name;
     private String role;

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import android.os.SystemClock;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -29,21 +28,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
-import android.widget.TextView;
 
 import org.lu.hypervisor.android.api.ApiClient;
-import org.lu.hypervisor.android.api.model.Notification;
 import org.lu.hypervisor.android.api.model.Photo;
 import org.lu.hypervisor.android.api.model.Subject;
 import org.lu.hypervisor.android.persist.AppDatabase;
-import org.lu.hypervisor.android.persist.User;
 import org.lu.hypervisor.android.receivers.ResponseBroadcastReceiver;
 import org.lu.hypervisor.android.receivers.ToastBroadcastReceiver;
 import org.lu.hypervisor.android.services.BackgroundService;
 
 import java.io.ByteArrayInputStream;
 import java.util.Base64;
-import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -69,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.subject_detail_avatar);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

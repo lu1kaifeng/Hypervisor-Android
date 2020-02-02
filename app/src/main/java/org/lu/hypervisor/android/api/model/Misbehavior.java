@@ -1,8 +1,9 @@
 package org.lu.hypervisor.android.api.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Misbehavior {
+public class Misbehavior implements Serializable {
     private Long id;
     private Course course;
     private Subject subject;

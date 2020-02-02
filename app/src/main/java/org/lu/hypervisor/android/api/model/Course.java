@@ -1,10 +1,11 @@
 package org.lu.hypervisor.android.api.model;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
 
-public class Course {
+public class Course implements Serializable {
     private Long id;
     private String name;
     private Subject teacher;

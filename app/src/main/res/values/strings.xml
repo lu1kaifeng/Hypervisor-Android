@@ -18,4 +18,5 @@
     <string name="login_btn_text">登录</string>
     <string name="empty_credentials">不得为空！</string>
     <string name="wrong_credentials">可能有误！</string>
+    <string name="title_activity_subject_detail">违纪行为</string>
 </resources>

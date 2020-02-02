@@ -1,6 +1,7 @@
 package org.lu.hypervisor.android.ui.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.AttributeSet;
@@ -11,6 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.textview.MaterialTextView;
 
 import org.lu.hypervisor.android.R;
+import org.lu.hypervisor.android.SubjectDetailActivity;
 import org.lu.hypervisor.android.api.model.Misbehavior;
 import org.lu.hypervisor.android.api.model.Photo;
 
@@ -39,6 +41,11 @@ public class MisbehaviorView extends LinearLayout {
     public MisbehaviorView(Context context,Misbehavior misbehavior,Photo photo){
         this(context,(AttributeSet) null);
         this.bindModel(misbehavior,photo);
+        this.setOnClickListener((view)->{
+            Intent intent = new Intent(MisbehaviorView.this.getContext(), SubjectDetailActivity.class);
+            SubjectDetailActivity.misbehavior = misbehavior;
+            MisbehaviorView.this.getContext().startActivity(intent);
+        });
     }
     private void init(){
         inflate(getContext(), R.layout.misbehavior_item,this);
