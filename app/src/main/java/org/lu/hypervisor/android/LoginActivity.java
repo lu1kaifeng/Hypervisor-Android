@@ -18,6 +18,7 @@ import org.lu.hypervisor.android.api.ApiClient;
 import org.lu.hypervisor.android.persist.AppDatabase;
 import org.lu.hypervisor.android.persist.User;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -32,13 +33,15 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+            backgroundThread.submit(()->{
+                AppDatabase appDatabase = AppDatabase.getDb(getApplicationContext());
+                if(appDatabase.userDao().entryCount() != 0){
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                }
+                appDatabase.close();
+            });
         super.onCreate(savedInstanceState);
-        backgroundThread.submit(()->{
-            if(AppDatabase.getDb(getApplicationContext()).userDao().entryCount() != 0){
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
         setContentView(R.layout.activity_login);
         btn = findViewById(R.id.btn_login);
         userNameInput = findViewById(R.id.userNameInput);
